@@ -61,8 +61,6 @@ private:
 
         uint8_t fragIx = (buffer[0] >> 4) & 0b11;
 
-        printf("New frag session, ix is %u\n", fragIx);
-
         if (fragIx > NB_FRAG_GROUPS - 1) {
             sendFragSessionAns(FSAE_IndexNotSupported);
             return LW_UC_OK;
