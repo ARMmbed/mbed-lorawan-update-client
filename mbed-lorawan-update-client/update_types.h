@@ -1,3 +1,20 @@
+/*
+* PackageLicenseDeclared: Apache-2.0
+* Copyright (c) 2018 ARM Limited
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 #ifndef __PROTOCOLLAYER_H
 #define __PROTOCOLLAYER_H
 
@@ -197,6 +214,11 @@ typedef struct {
      * by the receiver, it SHALL remove the last "padding" bytes in order to get the original binary file.
      */
     uint8_t padding;
+
+    /**
+     * Options for the fragmentation session, such as where in flash to store the data
+     */
+    FragmentationSessionOpts_t sessionOptions;
 
     /**
      * Actual fragmentation session, which manages all the memory for this session
