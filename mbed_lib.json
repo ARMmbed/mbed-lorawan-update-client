@@ -1,0 +1,56 @@
+{
+    "name": "lorawan-update-client",
+    "config": {
+        "max-redundancy": {
+            "help": "Maximum number of redundancy packets supported (affects memory usage)",
+            "value": 40
+        },
+        "slot-size": {
+            "help": "Firmware slot size, must be as big as the largest possible firmware image for the target",
+            "value": null
+        },
+        "slot0-header-address": {
+            "help": "Address in external flash where to put the slot 0 header, needs to be erase & write sector aligned",
+            "value": null
+        },
+        "slot0-fw-address": {
+            "help": "Address in external flash where to put the slot 0 firmware, needs to be directly after the header address, but aligned on the next block",
+            "value": null
+        },
+        "slot1-header-address": {
+            "help": "Address in external flash where to put the slot 1 header, needs to be erase & write sector aligned",
+            "value": null
+        },
+        "slot1-fw-address": {
+            "help": "Address in external flash where to put the slot 1 firmware, needs to be directly after the header address, but aligned on the next block",
+            "value": null
+        },
+        "slot2-header-address": {
+            "help": "Address in external flash where to put the slot 2 header, needs to be erase & write sector aligned",
+            "value": null
+        },
+        "slot2-fw-address": {
+            "help": "Address in external flash where to put the slot 2 firmware, needs to be directly after the header address, but aligned on the next block",
+            "value": null
+        },
+        "internal-flash-header": {
+            "help": "Address in internal flash where the firmware header is located",
+            "value": null
+        },
+        "overwrite-version": {
+            "help": "If set, will ignore the version number in the manifest",
+            "value": false
+        },
+        "interop-testing": {
+            "help": "If set to true, this will not try to read the firmware header, not try to verify the firmware or write the firmware header",
+            "value": false
+        }
+    },
+    "macros": [
+        "CBC=0",
+        "EBC=1",
+        "MBEDTLS_MPI_WINDOW_SIZE=1",
+        "MBEDTLS_MPI_MAX_SIZE=512",
+        "ARM_UC_USE_PAL_CRYPTO=0"
+    ]
+}
