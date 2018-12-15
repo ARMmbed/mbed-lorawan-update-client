@@ -90,17 +90,17 @@ public:
      * Initialize a new LoRaWANUpdateClient
      *
      * @param bd A block device
-     * @param appKey Application Key, used to derive session keys from multicast keys
+     * @param genAppKey Application Key, used to derive session keys from multicast keys
      * @param send_fn A send function, invoked when we want to relay data back to the network.
      *                Messages through this function should be sent as CONFIRMED uplinks.
      *                This is deliberatly not part of the callbacks structure, because it's a *required*
      *                part of the update client.
      */
-    LoRaWANUpdateClient(BlockDevice *bd, const uint8_t appKey[16], Callback<void(LoRaWANUpdateClientSendParams_t&)> send_fn)
+    LoRaWANUpdateClient(BlockDevice *bd, const uint8_t genAppKey[16], Callback<void(LoRaWANUpdateClientSendParams_t&)> send_fn)
         : _bd(bd), _send_fn(send_fn)
     {
-        // @todo: what if appKey is in secure element?
-        memcpy(_appKey, appKey, 16);
+        // @todo: what if genAppKey is in secure element?
+        memcpy(_genAppKey, genAppKey, 16);
 
         for (size_t ix = 0; ix < NB_FRAG_GROUPS; ix++) {
             frag_sessions[ix].active = false;
@@ -411,11 +411,12 @@ private:
         mc_groups[mcIx].minFcFCount = (buffer[24] << 24) + (buffer[23] << 16) + (buffer[22] << 8) + buffer[21];
         mc_groups[mcIx].maxFcFCount = (buffer[28] << 24) + (buffer[27] << 16) + (buffer[26] << 8) + buffer[25];
 
-        // Derived from the AppKey.  LoRaWAN 1.1+ end-devices SHALL use this scheme.
-        // McRootKey = aes128_encrypt(AppKey, 0x00 | pad16)
+        // Derived from the GenAppKey. This differs between LoRaWAN 1.0 and LoRaWAN 1.1,
+        // but there's no knowledge in this library which version is used
+        // McRootKey = aes128_encrypt(GenAppKey, 0x00 | pad16)
         const uint8_t mc_root_key_input[16] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
         uint8_t mc_root_key_output[16] = {};
-        AES_ECB_encrypt(mc_root_key_input, _appKey, mc_root_key_output, 16);
+        AES_ECB_encrypt(mc_root_key_input, _genAppKey, mc_root_key_output, 16);
 
         // McKEKey = aes128_encrypt(McRootKey, 0x00 | pad16)
         const uint8_t mc_e_key_input[16] = { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
@@ -429,8 +430,8 @@ private:
         // The McAppSKey and the McNetSKey are then derived from the group’s McKey as follow:
         // McAppSKey = aes128_encrypt(McKey, 0x01 | McAddr | pad16)
         // McNetSKey = aes128_encrypt(McKey, 0x02 | McAddr | pad16)
-        const uint8_t nwk_input[16] = { 0x01, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        const uint8_t app_input[16] = { 0x02, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        const uint8_t app_input[16] = { 0x01, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        const uint8_t nwk_input[16] = { 0x02, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
 
         AES_ECB_encrypt(nwk_input, mc_key, mc_groups[mcIx].nwkSKey, 16);
         AES_ECB_encrypt(app_input, mc_key, mc_groups[mcIx].appSKey, 16);
@@ -1363,7 +1364,7 @@ private:
 
     // external storage
     FragmentationBlockDeviceWrapper _bd;
-    uint8_t _appKey[16];
+    uint8_t _genAppKey[16];
     Callback<void(LoRaWANUpdateClientSendParams_t&)> _send_fn;
 };
 
