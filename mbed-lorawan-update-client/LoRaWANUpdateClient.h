@@ -430,8 +430,8 @@ private:
         // The McAppSKey and the McNetSKey are then derived from the group’s McKey as follow:
         // McAppSKey = aes128_encrypt(McKey, 0x01 | McAddr | pad16)
         // McNetSKey = aes128_encrypt(McKey, 0x02 | McAddr | pad16)
-        const uint8_t app_input[16] = { 0x01, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-        const uint8_t nwk_input[16] = { 0x02, buffer[4], buffer[3], buffer[2], buffer[1], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        const uint8_t app_input[16] = { 0x01, buffer[1], buffer[2], buffer[3], buffer[4], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+        const uint8_t nwk_input[16] = { 0x02, buffer[1], buffer[2], buffer[3], buffer[4], 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
 
         AES_ECB_encrypt(nwk_input, mc_key, mc_groups[mcIx].nwkSKey, 16);
         AES_ECB_encrypt(app_input, mc_key, mc_groups[mcIx].appSKey, 16);
