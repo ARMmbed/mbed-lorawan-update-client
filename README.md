@@ -4,7 +4,7 @@ Firmware update over the Air library for LoRaWAN devices running Mbed OS 5. It i
 
 ## Unit tests
 
-Unit tests are in the `TESTS` folder and are ran with Mbed CLI. Note that you need to specify a storage layer (could be HeapBlockDevice if you have enough space) in `TESTS/COMMON/test_setup.h`, and your storage configuration in `TESTS/tests/mbed_app.json`. Then run:
+Unit tests are in the `TESTS` folder and are ran with Mbed CLI. Note that you need to specify a storage layer (could be [HeapBlockDevice](https://os.mbed.com/docs/latest/apis/heapblockdevice.html) or [FlashIAPBlockDevice](https://os.mbed.com/docs/v5.10/apis/flashiapblockdevice.html)) in `TESTS/COMMON/test_setup.h`, and your storage configuration in `TESTS/tests/mbed_app.json`. Then run:
 
 ```
 $ mbed test --app-config TESTS/tests/mbed_app.json -n mbed-lorawan-update-client-tests-tests-* -v
