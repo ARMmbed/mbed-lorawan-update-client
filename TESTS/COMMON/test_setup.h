@@ -13,6 +13,11 @@ SimulatorBlockDevice bd("lorawan-frag-in-flash", 256 * 528, static_cast<uint64_t
 #include "AT45BlockDevice.h"
 AT45BlockDevice bd(SPI_MOSI, SPI_MISO, SPI_SCK, SPI_NSS);
 
+#elif defined(TARGET_DISCO_L475VG_IOT01A)
+// Flash interface on the DISCO-L475VG board
+#include "QSPIFBlockDevice.h"
+QSPIFBlockDevice bd (QSPI_FLASH1_IO0, QSPI_FLASH1_IO1, QSPI_FLASH1_IO2, QSPI_FLASH1_IO3, QSPI_FLASH1_SCK, QSPI_FLASH1_CSN, QSPIF_POLARITY_MODE_0, MBED_CONF_QSPIF_QSPI_FREQ);
+
 #else
 #error "No storage selected in test_setup.h"
 
