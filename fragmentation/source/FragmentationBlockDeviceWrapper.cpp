@@ -36,7 +36,7 @@ int FragmentationBlockDeviceWrapper::init() {
         return init_ret;
     }
 
-    _page_size = _block_device->get_read_size();
+    _page_size = _block_device->get_erase_size();
     _total_size = _block_device->size();
 
     void *buffer = calloc((size_t)_page_size, 1);
@@ -90,6 +90,10 @@ int FragmentationBlockDeviceWrapper::program(const void *a_buffer, bd_addr_t add
             // frag_debug("%02x ", _page_buffer[ix]);
         // }
         // frag_debug("\n");
+
+        // erase the block first
+        r = _block_device->erase(page * _page_size, _page_size);
+        if (r != 0) return r;
 
         // and write back
         r = _block_device->program(_page_buffer, page * _page_size, _page_size);
