@@ -76,7 +76,6 @@
             "lorawan-update-client.slot2-fw-address"    : "(0x201000 + 72)",
             "lorawan-update-client.internal-flash-header": "(0x08000000 + (34 * 1024))",
             "lorawan-update-client.overwrite-version"   : false,
-            "lorawan-update-client.bd-page-size"        : "0x1000",
             "target.app_offset"                         : "0x9000",
             "target.header_offset"                      : "0x8800"
         }
