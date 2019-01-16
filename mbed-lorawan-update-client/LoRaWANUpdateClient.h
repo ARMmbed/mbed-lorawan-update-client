@@ -590,8 +590,10 @@ private:
         // No clock synchronisation done - this means that we need a proper clock sync before the MC request starts
         // the response should indicate this to the network server (because timeToStart is gonna be way off)
         if (_clockSync.correction == 0x0) {
+#if MBED_CONF_LORAWAN_UPDATE_CLIENT_TRUST_RTC == 1
             tr_warn("no accurate time known (correction=%d)", _clockSync.correction);
             timeToStart = 0xffffffff;
+#endif
         }
         else if (mc_groups[mcIx].params.sessionTime < (currTime % 4294967296 /*pow(2, 32)*/)) {
             tr_warn("ClassCSessionReq for time in the past... Starting it immediately");
@@ -1298,13 +1300,7 @@ private:
      * Get the value of the RTC in seconds
      */
     uint32_t get_rtc_time_s() {
-#if MBED_CONF_RTOS_PRESENT
-        return static_cast<uint32_t>(Kernel::get_ms_count() / 1000);
-#elif defined(TARGET_SIMULATOR)
-        return static_cast<uint32_t>(mbed_uptime() / 1000L / 1000L);
-#else
-        return static_cast<uint32_t>(_clock.read_ms() / 1000L);
-#endif
+        return static_cast<uint32_t>(time(NULL));
     }
 
     /**
