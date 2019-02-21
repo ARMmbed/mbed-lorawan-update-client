@@ -20,7 +20,7 @@
 #include "mbed_trace.h"
 #define TRACE_GROUP "FSES"
 
-FragmentationSession::FragmentationSession(FragmentationBlockDeviceWrapper* flash, FragmentationSessionOpts_t opts)
+FragmentationSession::FragmentationSession(FragBDWrapper* flash, FragmentationSessionOpts_t opts)
     : _flash(flash), _opts(opts),
         _math(flash, opts.NumberOfFragments, opts.FragmentSize, opts.RedundancyPackets, opts.FlashOffset),
         _frames_received(0)
@@ -40,7 +40,7 @@ FragmentationSession::~FragmentationSession()
 
 FragResult FragmentationSession::initialize() {
     if (_flash->init() != BD_ERROR_OK) {
-        tr_warn("Could not initialize FragmentationBlockDeviceWrapper");
+        tr_warn("Could not initialize FragBDWrapper");
         return FRAG_NO_MEMORY;
     }
 

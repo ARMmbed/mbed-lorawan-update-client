@@ -15,7 +15,7 @@ Description: 	Firmware update over the air with LoRa proof of concept
 
 #include "mbed.h"
 #include "mbed_debug.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 
 #define FRAG_SESSION_ONGOING    0xffff
 
@@ -39,7 +39,7 @@ class FragmentationMath
      * @param frame_size     Size of a fragment (without LoRaWAN header)
      * @param redundancy_max Maximum number of redundancy packets
      */
-    FragmentationMath(FragmentationBlockDeviceWrapper *flash, uint16_t frame_count, uint8_t frame_size, uint16_t redundancy_max, size_t flash_offset);
+    FragmentationMath(FragBDWrapper *flash, uint16_t frame_count, uint8_t frame_size, uint16_t redundancy_max, size_t flash_offset);
 
     ~FragmentationMath();
 
@@ -156,7 +156,7 @@ class FragmentationMath
     */
     bool IsPowerOfTwo(unsigned int x);
 
-    FragmentationBlockDeviceWrapper *_flash;
+    FragBDWrapper *_flash;
     uint16_t _frame_count;
     uint8_t _frame_size;
     uint16_t _redundancy_max;

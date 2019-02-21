@@ -27,7 +27,7 @@
 #if defined(MBEDTLS_SHA256_C)
 
 #include "mbed.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 #include "sha256.h"
 
 class FragmentationSha256 {
@@ -39,7 +39,7 @@ public:
      * @param buffer        A buffer to be used to read into
      * @param buffer_size   The size of the buffer
      */
-    FragmentationSha256(FragmentationBlockDeviceWrapper* flash, uint8_t* buffer, size_t buffer_size);
+    FragmentationSha256(FragBDWrapper* flash, uint8_t* buffer, size_t buffer_size);
 
     /**
      * Calculate the SHA256 hash of the file
@@ -52,7 +52,7 @@ public:
     void calculate(uint32_t address, size_t size, unsigned char output[32]);
 
 private:
-    FragmentationBlockDeviceWrapper* _flash;
+    FragBDWrapper* _flash;
     uint8_t* _buffer;
     size_t _buffer_size;
     mbedtls_sha256_context _sha256_ctx;

@@ -48,6 +48,10 @@
         "trust-rtc": {
             "help": "Whether to trust the RTC, and not emit warnings about unsynchronised clock. Enable this setting if using DeviceTimeReq MAC commands.",
             "value": false
+        },
+        "adjust-class-c-start-time": {
+            "help": "Adjustment of class C start time, we use to have some extra time in the application to handle spinning down class A time",
+            "value": "-2"
         }
     },
     "macros": [

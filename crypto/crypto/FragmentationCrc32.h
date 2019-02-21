@@ -19,7 +19,7 @@
 #define _MBED_LORAWAN_UPDATE_CLIENT_CRYPTO_FRAG_CRC32
 
 #include "mbed.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 #include "crc32.h"
 
 class FragmentationCrc32 {
@@ -27,11 +27,11 @@ public:
     /**
      * Calculate the CRC32 hash of a file in flash
      *
-     * @param flash         Instance of FragmentationBlockDeviceWrapper
+     * @param flash         Instance of FragBDWrapper
      * @param buffer        A buffer to be used to read into
      * @param buffer_size   The size of the buffer
      */
-    FragmentationCrc32(FragmentationBlockDeviceWrapper* flash, uint8_t* buffer, size_t buffer_size);
+    FragmentationCrc32(FragBDWrapper* flash, uint8_t* buffer, size_t buffer_size);
 
     /**
      * Calculate the CRC32 hash of the file
@@ -44,7 +44,7 @@ public:
     uint32_t calculate(uint32_t address, size_t size);
 
 private:
-    FragmentationBlockDeviceWrapper* _flash;
+    FragBDWrapper* _flash;
     uint8_t* _buffer;
     size_t _buffer_size;
 };

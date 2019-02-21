@@ -25,7 +25,7 @@
 #include "mbed.h"
 #include "BDFile.h"
 #include "janpatch.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 #include "FlashIAP.h"
 
 #include "mbed_trace.h"
@@ -45,7 +45,7 @@ enum MBED_DELTA_UPDATE {
  * @param bd_address Offset for block device to store the application in
  * @returns 0 if OK, negative value if not OK
  */
-int copy_flash_to_blockdevice(const uint32_t flash_page_size, size_t flash_address, size_t flash_size, FragmentationBlockDeviceWrapper *bd, size_t bd_address) {
+int copy_flash_to_blockdevice(const uint32_t flash_page_size, size_t flash_address, size_t flash_size, FragBDWrapper *bd, size_t bd_address) {
     int r;
 
     FlashIAP flash;
@@ -104,7 +104,7 @@ int copy_flash_to_blockdevice(const uint32_t flash_page_size, size_t flash_addre
  * @param buffer_size Buffer size to allocate
  * @returns 0 if OK, negative value if not OK
  */
-int print_blockdevice_content(FragmentationBlockDeviceWrapper *bd, size_t address, size_t length, size_t buffer_size) {
+int print_blockdevice_content(FragBDWrapper *bd, size_t address, size_t length, size_t buffer_size) {
     uint8_t *buffer = (uint8_t*)malloc(buffer_size);
     if (!buffer) {
         return MBED_DELTA_UPDATE_NO_MEMORY;
@@ -152,7 +152,7 @@ static void patch_progress(uint8_t pct) {
  * @param target Target file on block device
  * @returns 0 if OK, a negative value if not OK
  */
-int apply_delta_update(FragmentationBlockDeviceWrapper *bd, size_t buffer_size, BDFILE *source, BDFILE *patch, BDFILE *target) {
+int apply_delta_update(FragBDWrapper *bd, size_t buffer_size, BDFILE *source, BDFILE *patch, BDFILE *target) {
     unsigned char *source_buffer = (unsigned char*)malloc(buffer_size);
     if (!source_buffer) {
         return MBED_DELTA_UPDATE_NO_MEMORY;

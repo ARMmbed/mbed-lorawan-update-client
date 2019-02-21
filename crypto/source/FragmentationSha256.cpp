@@ -17,7 +17,7 @@
 
 #include "crypto/FragmentationSha256.h"
 
-FragmentationSha256::FragmentationSha256(FragmentationBlockDeviceWrapper* flash, uint8_t* buffer, size_t buffer_size)
+FragmentationSha256::FragmentationSha256(FragBDWrapper* flash, uint8_t* buffer, size_t buffer_size)
     : _flash(flash), _buffer(buffer), _buffer_size(buffer_size)
 {
 }

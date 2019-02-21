@@ -24,7 +24,7 @@
 #include "BDFile.h"
 #include "FragmentationSha256.h"
 #include "FragmentationEcdsaVerify.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 #include "FragmentationCrc32.h"
 #include "arm_uc_metadata_header_v2.h"
 #include "update_signature.h"
@@ -1396,7 +1396,7 @@ private:
 #endif
 
     // external storage
-    FragmentationBlockDeviceWrapper _bd;
+    FragBDWrapper _bd;
     uint8_t _genAppKey[16];
     Callback<void(LoRaWANUpdateClientSendParams_t&)> _send_fn;
 };

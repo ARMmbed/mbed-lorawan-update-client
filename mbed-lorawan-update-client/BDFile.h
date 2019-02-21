@@ -18,7 +18,7 @@
 #ifndef _MBED_LORAWAN_UPDATE_CLIENT_BDFILE
 #define _MBED_LORAWAN_UPDATE_CLIENT_BDFILE
 
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 
 // So, janpatch uses POSIX FS calls, let's emulate them, but backed by BlockDevice driver
 
@@ -30,7 +30,7 @@ public:
      * @param _offset Offset of the file in flash
      * @param _size Size of the file in flash
      */
-    BDFILE(FragmentationBlockDeviceWrapper* _bd, size_t _offset, size_t _size) :
+    BDFILE(FragBDWrapper* _bd, size_t _offset, size_t _size) :
         bd(_bd), offset(_offset), size(_size), current_pos(0)
     {
 
@@ -96,7 +96,7 @@ public:
     }
 
 private:
-    FragmentationBlockDeviceWrapper* bd;
+    FragBDWrapper* bd;
     size_t offset;
     size_t size;
     int current_pos;

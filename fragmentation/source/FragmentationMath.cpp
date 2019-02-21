@@ -15,7 +15,7 @@ Description: 	Firmware update over the air with LoRa proof of concept
 #include "mbed_trace.h"
 #define TRACE_GROUP "FMTH"
 
-FragmentationMath::FragmentationMath(FragmentationBlockDeviceWrapper *flash, uint16_t frame_count, uint8_t frame_size, uint16_t redundancy_max, size_t flash_offset)
+FragmentationMath::FragmentationMath(FragBDWrapper *flash, uint16_t frame_count, uint8_t frame_size, uint16_t redundancy_max, size_t flash_offset)
     : _flash(flash), _frame_count(frame_count), _frame_size(frame_size), _redundancy_max(redundancy_max), _flash_offset(flash_offset)
 {
 }

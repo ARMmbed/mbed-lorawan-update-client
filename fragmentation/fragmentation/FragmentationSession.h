@@ -19,7 +19,7 @@
 #define _MBED_LORAWAN_UPDATE_CLIENT_FRAGMENTATION_SESSION
 
 #include "mbed.h"
-#include "FragmentationBlockDeviceWrapper.h"
+#include "FragBDWrapper.h"
 #include "FragmentationMath.h"
 #include "mbed_debug.h"
 
@@ -55,7 +55,7 @@ public:
      * @param flash A block device that is wrapped for unaligned operations
      * @param opts  List of options for this session
      */
-    FragmentationSession(FragmentationBlockDeviceWrapper* flash, FragmentationSessionOpts_t opts);
+    FragmentationSession(FragBDWrapper* flash, FragmentationSessionOpts_t opts);
 
     ~FragmentationSession();
 
@@ -109,7 +109,7 @@ public:
     FragmentationSessionOpts_t get_options();
 
 private:
-    FragmentationBlockDeviceWrapper* _flash;
+    FragBDWrapper* _flash;
     FragmentationSessionOpts_t _opts;
     FragmentationMath _math;
 

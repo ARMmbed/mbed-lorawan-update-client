@@ -17,7 +17,7 @@
 
 #include "FragmentationCrc32.h"
 
-FragmentationCrc32::FragmentationCrc32(FragmentationBlockDeviceWrapper* flash, uint8_t* buffer, size_t buffer_size)
+FragmentationCrc32::FragmentationCrc32(FragBDWrapper* flash, uint8_t* buffer, size_t buffer_size)
     : _flash(flash), _buffer(buffer), _buffer_size(buffer_size)
 {
 
