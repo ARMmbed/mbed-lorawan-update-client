@@ -1308,6 +1308,7 @@ private:
         _send_fn(params);
     }
 
+public:
     /**
      * Compare whether two buffers contain the same content
      */
@@ -1333,6 +1334,7 @@ private:
         }
     }
 
+private:
     /**
      * Get the value of the RTC in seconds
      */
