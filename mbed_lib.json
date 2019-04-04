@@ -44,6 +44,10 @@
         "interop-testing": {
             "help": "If set to true, this will not try to read the firmware header, not try to verify the firmware or write the firmware header",
             "value": false
+        },
+        "trust-rtc": {
+            "help": "Whether to trust the RTC, and not emit warnings about unsynchronised clock. Enable this setting if using DeviceTimeReq MAC commands.",
+            "value": false
         }
     },
     "macros": [

@@ -328,6 +328,15 @@ typedef struct {
      */
     bool retriesAllowed;
 
+    /**
+     * Timestamp when this message was created.
+     * If for some reason the application layer cannot send immediately it could re-calculate
+     * package content (e.g. timeToStart for Class C group).
+     * Not a perfect solution, as this requires the application layer to know about the message format,
+     * but will be fixed properly when DevTimeReq and multicast are implemented in the MAC layer.
+     */
+    uint32_t createdTimestamp;
+
 } LoRaWANUpdateClientSendParams_t;
 
 // Parameters for the Class C session, to be handled by the user application when the

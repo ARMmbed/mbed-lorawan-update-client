@@ -76,7 +76,8 @@ enum LW_UC_STATUS {
     LW_UC_INTERNALFLASH_READ_ERROR = 18,
     LW_UC_INTERNALFLASH_DEINIT_ERROR = 19,
     LW_UC_INTERNALFLASH_SECTOR_SIZE_SMALLER = 20,
-    LW_UC_INTERNALFLASH_HEADER_PARSE_FAILED = 21
+    LW_UC_INTERNALFLASH_HEADER_PARSE_FAILED = 21,
+    LW_UC_NOT_CLASS_C_SESSION_ANS = 22
 };
 
 enum LW_UC_EVENT {
@@ -266,6 +267,41 @@ public:
         mbed_stats_heap_get(&heap_stats);
 
         tr_info("%sHeap stats: %lu / %lu (max=%lu)", prefix, heap_stats.current_size, heap_stats.reserved_size, heap_stats.max_size);
+    }
+
+    /**
+     * If the Class C Session Answer is sent later (e.g. due to duty cycle limitations)
+     * call this function to update the timeToStart value
+     * this is a hack, will be fixed properly when migrating multicast
+     */
+    LW_UC_STATUS updateClassCSessionAns(LoRaWANUpdateClientSendParams_t *queued_message) {
+        if (queued_message->port != MCCONTROL_PORT || queued_message->length != MC_CLASSC_SESSION_ANS_LENGTH
+                || queued_message->data[0] != MC_CLASSC_SESSION_ANS) {
+            return LW_UC_NOT_CLASS_C_SESSION_ANS;
+        }
+
+        uint32_t originalTimeToStart = queued_message->data[2] + (queued_message->data[3] << 8) + (queued_message->data[4] << 16);
+
+        // calculate delta between original send time and now
+        uint32_t timeDelta = get_rtc_time_s() - queued_message->createdTimestamp;
+
+        uint32_t timeToStart;
+        if (timeDelta > originalTimeToStart) { // should already have started, send 0 back
+            timeToStart = 0;
+        }
+        else {
+            timeToStart = originalTimeToStart - timeDelta;
+        }
+
+        tr_debug("updateClassCSessionAns, originalTimeToStart=%lu, delta=%lu, newTimeToStart=%lu",
+            originalTimeToStart, timeDelta, timeToStart);
+
+        // update buffer
+        queued_message->data[2] = timeToStart & 0xff;
+        queued_message->data[3] = timeToStart >> 8 & 0xff;
+        queued_message->data[4] = timeToStart >> 16 & 0xff;
+
+        return LW_UC_OK;
     }
 
     /**
@@ -590,8 +626,10 @@ private:
         // No clock synchronisation done - this means that we need a proper clock sync before the MC request starts
         // the response should indicate this to the network server (because timeToStart is gonna be way off)
         if (_clockSync.correction == 0x0) {
+#if MBED_CONF_LORAWAN_UPDATE_CLIENT_TRUST_RTC == 1
             tr_warn("no accurate time known (correction=%d)", _clockSync.correction);
             timeToStart = 0xffffffff;
+#endif
         }
         else if (mc_groups[mcIx].params.sessionTime < (currTime % 4294967296 /*pow(2, 32)*/)) {
             tr_warn("ClassCSessionReq for time in the past... Starting it immediately");
@@ -1265,6 +1303,7 @@ private:
         params.length = length;
         params.confirmed = confirmed;
         params.retriesAllowed = retriesAllowed;
+        params.createdTimestamp = get_rtc_time_s();
 
         _send_fn(params);
     }
@@ -1298,13 +1337,7 @@ private:
      * Get the value of the RTC in seconds
      */
     uint32_t get_rtc_time_s() {
-#if MBED_CONF_RTOS_PRESENT
-        return static_cast<uint32_t>(Kernel::get_ms_count() / 1000);
-#elif defined(TARGET_SIMULATOR)
-        return static_cast<uint32_t>(mbed_uptime() / 1000L / 1000L);
-#else
-        return static_cast<uint32_t>(_clock.read_ms() / 1000L);
-#endif
+        return static_cast<uint32_t>(time(NULL));
     }
 
     /**
