@@ -344,36 +344,6 @@ typedef struct {
 typedef struct {
 
     /**
-     * Multicast group network address.
-     */
-    uint32_t deviceAddr;
-
-    /**
-     * Network session key.
-     */
-    uint8_t nwkSKey[16];
-
-    /**
-     * Application session key.
-     */
-    uint8_t appSKey[16];
-
-    /**
-     * The minMcFCount field is the next frame counter value of the multicast downlink to be sent by the server
-     * for this group. This information is required in case an end-device is added to a group that already exists.
-     * The end-device MUST reject any downlink multicast frame using this group multicast address if the frame
-     * counter is < minMcFCount.
-     */
-    uint32_t minFcFCount;
-
-    /**
-     * maxMcFCount specifies the life time of this multicast group expressed as a maximum number of frames.
-     * The end-device will only accept a multicast downlink frame if the 32bits frame counter value
-     * minMcFCount ≤ McFCount < maxMcFCount.
-     */
-    uint32_t maxFcFCount;
-
-    /**
      * Frequency used for the multicast in Hz.
      */
 	uint32_t downlinkFreq;
